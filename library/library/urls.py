@@ -16,15 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from mainapp import views
 from rest_framework.routers import DefaultRouter
-from authors.views import AuthorModelViewSet
 
 
 router = DefaultRouter()
-router.register('authors', AuthorModelViewSet)
+router.register('base', views.ArticleViewSet, basename='article')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include(router.urls)),
+    path('views/api-view/', views.ArticleAPIVIew.as_view()),
+    path('generic/retrieve/<int:pk>/', views.ArticleRetrieveAPIView.as_view()),
+    path('filters/kwargs/<str:name>/', views.ArticleKwargsFilterView.as_view()),
+    path('filters/', include(filter_router.urls)),
 ]
